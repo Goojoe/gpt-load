@@ -39,7 +39,7 @@ echo "sk-your-api-key-1" > keys.txt
 echo "sk-your-api-key-2" >> keys.txt
 
 # 运行容器
-docker run -d -p 3000:3000 \
+docker run -d -p 7860:7860 \
   -v $(pwd)/keys.txt:/app/keys.txt:ro \
   --name gpt-load \
   ghcr.io/tbphp/gpt-load:latest
@@ -94,7 +94,7 @@ cp .env.example .env
 
 | 配置项         | 环境变量                           | 默认值                      | 说明                                               |
 | -------------- | ---------------------------------- | --------------------------- | -------------------------------------------------- |
-| 服务器端口     | `PORT`                             | 3000                        | 服务器监听端口                                     |
+| 服务器端口     | `PORT`                             | 7860                        | 服务器监听端口                                     |
 | 服务器主机     | `HOST`                             | 0.0.0.0                     | 服务器绑定地址                                     |
 | 密钥文件       | `KEYS_FILE`                        | keys.txt                    | API 密钥文件路径                                   |
 | 起始索引       | `START_INDEX`                      | 0                           | 密钥轮换起始索引                                   |

@@ -50,10 +50,10 @@ type ServerConfig struct {
 
 // KeysConfig represents keys configuration
 type KeysConfig struct {
-	FilePath           string `json:"filePath"`
-	StartIndex         int    `json:"startIndex"`
-	BlacklistThreshold int    `json:"blacklistThreshold"`
-	MaxRetries         int    `json:"maxRetries"`
+	APIKeys            []string `json:"apiKeys"`
+	StartIndex         int      `json:"startIndex"`
+	BlacklistThreshold int      `json:"blacklistThreshold"`
+	MaxRetries         int      `json:"maxRetries"`
 }
 
 // OpenAIConfig represents OpenAI API configuration

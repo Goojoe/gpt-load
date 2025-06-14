@@ -52,11 +52,11 @@ RUN chown -R appuser:appgroup /app
 USER appuser
 
 # 暴露端口
-EXPOSE 3000
+EXPOSE 7860
 
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:3000/health || exit 1
+    CMD curl -f http://localhost:7860/health || exit 1
 
 # 启动命令
 CMD ["./gpt-load"]

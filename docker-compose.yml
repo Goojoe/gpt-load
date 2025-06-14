@@ -5,7 +5,7 @@ services:
     image: ghcr.io/tbphp/gpt-load:latest
     container_name: gpt-load
     ports:
-      - "3000:3000"
+      - "7860:7860"
     volumes:
       # 挂载密钥文件（只读）
       - ./keys.txt:/app/keys.txt:ro
@@ -16,7 +16,7 @@ services:
 
     # 健康检查
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:7860/health"]
       interval: 30s
       timeout: 10s
       retries: 3

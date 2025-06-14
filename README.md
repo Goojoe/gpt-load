@@ -39,7 +39,7 @@ echo "sk-your-api-key-1" > keys.txt
 echo "sk-your-api-key-2" >> keys.txt
 
 # Run the container
-docker run -d -p 3000:3000 \
+docker run -d -p 7860:7860 \
   -v $(pwd)/keys.txt:/app/keys.txt:ro \
   --name gpt-load \
   ghcr.io/tbphp/gpt-load:latest
@@ -94,7 +94,7 @@ cp .env.example .env
 
 | Setting                 | Environment Variable               | Default                     | Description                                                                                 |
 | ----------------------- | ---------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------- |
-| Server Port             | `PORT`                             | 3000                        | Server listening port                                                                       |
+| Server Port             | `PORT`                             | 7860                        | Server listening port                                                                       |
 | Server Host             | `HOST`                             | 0.0.0.0                     | Server binding address                                                                      |
 | Keys File               | `KEYS_FILE`                        | keys.txt                    | API keys file path                                                                          |
 | Start Index             | `START_INDEX`                      | 0                           | Starting key index for rotation                                                             |

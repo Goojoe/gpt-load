@@ -24,22 +24,22 @@ build:
 build-all: clean
 	@echo "🔨 构建所有平台版本..."
 	@mkdir -p $(BUILD_DIR)
-	
+
 	# Linux AMD64
 	GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)-linux-amd64 $(MAIN_PATH)
-	
+
 	# Linux ARM64
 	GOOS=linux GOARCH=arm64 go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)-linux-arm64 $(MAIN_PATH)
-	
+
 	# macOS AMD64
 	GOOS=darwin GOARCH=amd64 go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)-darwin-amd64 $(MAIN_PATH)
-	
+
 	# macOS ARM64 (Apple Silicon)
 	GOOS=darwin GOARCH=arm64 go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)-darwin-arm64 $(MAIN_PATH)
-	
+
 	# Windows AMD64
 	GOOS=windows GOARCH=amd64 go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)-windows-amd64.exe $(MAIN_PATH)
-	
+
 	@echo "✅ 所有平台构建完成"
 
 # 运行
@@ -143,7 +143,7 @@ docker-run:
 	@echo "🐳 运行 Docker 容器（预构建镜像）..."
 	docker run -d \
 		--name gpt-load \
-		-p 3000:3000 \
+		-p 7860:7860 \
 		-v $(PWD)/keys.txt:/app/keys.txt:ro \
 		-v $(PWD)/.env:/app/.env:ro \
 		--restart unless-stopped \
@@ -155,7 +155,7 @@ docker-run-local:
 	@echo "🐳 运行 Docker 容器（本地构建）..."
 	docker run -d \
 		--name gpt-load-local \
-		-p 3000:3000 \
+		-p 7860:7860 \
 		-v $(PWD)/keys.txt:/app/keys.txt:ro \
 		-v $(PWD)/.env:/app/.env:ro \
 		--restart unless-stopped \
@@ -190,25 +190,25 @@ validate-keys:
 .PHONY: health
 health:
 	@echo "💚 健康检查..."
-	@curl -s http://localhost:3000/health | jq . || echo "请安装 jq 或检查服务是否运行"
+	@curl -s http://localhost:7860/health | jq . || echo "请安装 jq 或检查服务是否运行"
 
 # 查看统计
 .PHONY: stats
 stats:
 	@echo "📊 查看统计信息..."
-	@curl -s http://localhost:3000/stats | jq . || echo "请安装 jq 或检查服务是否运行"
+	@curl -s http://localhost:7860/stats | jq . || echo "请安装 jq 或检查服务是否运行"
 
 # 重置密钥
 .PHONY: reset-keys
 reset-keys:
 	@echo "🔄 重置密钥状态..."
-	@curl -s http://localhost:3000/reset-keys | jq . || echo "请安装 jq 或检查服务是否运行"
+	@curl -s http://localhost:7860/reset-keys | jq . || echo "请安装 jq 或检查服务是否运行"
 
 # 查看黑名单
 .PHONY: blacklist
 blacklist:
 	@echo "🚫 查看黑名单..."
-	@curl -s http://localhost:3000/blacklist | jq . || echo "请安装 jq 或检查服务是否运行"
+	@curl -s http://localhost:7860/blacklist | jq . || echo "请安装 jq 或检查服务是否运行"
 
 # 帮助
 .PHONY: help

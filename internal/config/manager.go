@@ -62,7 +62,7 @@ func NewManager() (types.ConfigManager, error) {
 
 	config := &Config{
 		Server: types.ServerConfig{
-			Port:                    parseInteger(os.Getenv("PORT"), 3000),
+			Port:                    parseInteger(os.Getenv("PORT"), 7860),
 			Host:                    getEnvOrDefault("HOST", "0.0.0.0"),
 			ReadTimeout:             parseInteger(os.Getenv("SERVER_READ_TIMEOUT"), 120),
 			WriteTimeout:            parseInteger(os.Getenv("SERVER_WRITE_TIMEOUT"), 1800),
@@ -70,7 +70,7 @@ func NewManager() (types.ConfigManager, error) {
 			GracefulShutdownTimeout: parseInteger(os.Getenv("SERVER_GRACEFUL_SHUTDOWN_TIMEOUT"), 60),
 		},
 		Keys: types.KeysConfig{
-			FilePath:           getEnvOrDefault("KEYS_FILE", "keys.txt"),
+			APIKeys:            parseArray(os.Getenv("API_KEYS"), []string{}),
 			StartIndex:         parseInteger(os.Getenv("START_INDEX"), 0),
 			BlacklistThreshold: parseInteger(os.Getenv("BLACKLIST_THRESHOLD"), 1),
 			MaxRetries:         parseInteger(os.Getenv("MAX_RETRIES"), 3),
@@ -212,7 +212,7 @@ func (m *Manager) Validate() error {
 func (m *Manager) DisplayConfig() {
 	logrus.Info("Current Configuration:")
 	logrus.Infof("   Server: %s:%d", m.config.Server.Host, m.config.Server.Port)
-	logrus.Infof("   Keys file: %s", m.config.Keys.FilePath)
+	logrus.Infof("   API Keys loaded: %d", len(m.config.Keys.APIKeys))
 	logrus.Infof("   Start index: %d", m.config.Keys.StartIndex)
 	logrus.Infof("   Blacklist threshold: %d errors", m.config.Keys.BlacklistThreshold)
 	logrus.Infof("   Max retries: %d", m.config.Keys.MaxRetries)

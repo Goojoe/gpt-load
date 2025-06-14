@@ -22,7 +22,7 @@ const (
 	ErrAllKeysBlacklisted
 
 	// Proxy errors
-	ErrProxyRequest ErrorCode = iota + 3000
+	ErrProxyRequest ErrorCode = iota + 7860
 	ErrProxyResponse
 	ErrProxyTimeout
 	ErrProxyRetryExhausted
@@ -93,9 +93,9 @@ func getHTTPStatusForCode(code ErrorCode) int {
 	switch {
 	case code >= 1000 && code < 2000: // Configuration errors
 		return http.StatusInternalServerError
-	case code >= 2000 && code < 3000: // Key management errors
+	case code >= 2000 && code < 7860: // Key management errors
 		return http.StatusServiceUnavailable
-	case code >= 3000 && code < 4000: // Proxy errors
+	case code >= 7860 && code < 4000: // Proxy errors
 		return http.StatusBadGateway
 	case code >= 4000 && code < 5000: // Authentication errors
 		return http.StatusUnauthorized

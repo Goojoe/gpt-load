@@ -42,12 +42,7 @@ type Manager struct {
 
 // NewManager creates a new key manager
 func NewManager(config types.KeysConfig) (types.KeyManager, error) {
-	if config.FilePath == "" {
-		return nil, errors.NewAppError(errors.ErrKeyFileNotFound, "Keys file path is required")
-	}
-
 	km := &Manager{
-		keysFilePath: config.FilePath,
 		currentIndex: int64(config.StartIndex),
 		stopCleanup:  make(chan bool),
 		config:       config,
@@ -67,6 +62,10 @@ func NewManager(config types.KeysConfig) (types.KeyManager, error) {
 	km.setupMemoryCleanup()
 
 	// Load keys
+	if len(config.APIKeys) == 0 {
+		return nil, errors.NewAppError(errors.ErrNoKeysAvailable, "No API keys provided in environment variables")
+	}
+
 	if err := km.LoadKeys(); err != nil {
 		return nil, err
 	}
@@ -74,38 +73,27 @@ func NewManager(config types.KeysConfig) (types.KeyManager, error) {
 	return km, nil
 }
 
-// LoadKeys loads API keys from file
+// LoadKeys loads API keys from environment variables
 func (km *Manager) LoadKeys() error {
-	file, err := os.Open(km.keysFilePath)
-	if err != nil {
-		return errors.NewAppErrorWithCause(errors.ErrKeyFileNotFound, "Failed to open keys file", err)
-	}
-	defer file.Close()
-
 	var keys []string
 	var keyPreviews []string
 
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if line != "" && !strings.HasPrefix(line, "#") {
-			keys = append(keys, line)
+	for _, key := range km.config.APIKeys {
+		trimmedKey := strings.TrimSpace(key)
+		if trimmedKey != "" {
+			keys = append(keys, trimmedKey)
 			// Create preview (first 8 chars + "..." + last 4 chars)
-			if len(line) > 12 {
-				preview := line[:8] + "..." + line[len(line)-4:]
+			if len(trimmedKey) > 12 {
+				preview := trimmedKey[:8] + "..." + trimmedKey[len(trimmedKey)-4:]
 				keyPreviews = append(keyPreviews, preview)
 			} else {
-				keyPreviews = append(keyPreviews, line)
+				keyPreviews = append(keyPreviews, trimmedKey)
 			}
 		}
 	}
 
-	if err := scanner.Err(); err != nil {
-		return errors.NewAppErrorWithCause(errors.ErrKeyFileInvalid, "Failed to read keys file", err)
-	}
-
 	if len(keys) == 0 {
-		return errors.NewAppError(errors.ErrNoKeysAvailable, "No valid API keys found in file")
+		return errors.NewAppError(errors.ErrNoKeysAvailable, "No valid API keys found in environment variables")
 	}
 
 	km.keysMutex.Lock()
@@ -113,7 +101,7 @@ func (km *Manager) LoadKeys() error {
 	km.keyPreviews = keyPreviews
 	km.keysMutex.Unlock()
 
-	logrus.Infof("Successfully loaded %d API keys", len(keys))
+	logrus.Infof("Successfully loaded %d API keys from environment variables", len(keys))
 	return nil
 }
 
