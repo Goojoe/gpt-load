@@ -1,4 +1,4 @@
-FROM ghcr.io/tbphp/gpt-load:latest
+FROM ghcr.io/Goojoe/gpt-load:latest
 
 WORKDIR /app
 
