@@ -4,6 +4,9 @@ on:
   push:
     tags:
       - "*"
+    branches:
+      - main # 默认分支名称，根据实际仓库调整
+      - master
 
 env:
   REGISTRY: ghcr.io
